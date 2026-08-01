@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { FinLeapLogo } from "@/components/FinLeapLogo";
 import { apiRequest } from '@/lib/api';
+import { GOOGLE_CLIENT_ID } from '@/lib/config';
 import { useAuthStore } from '@/store/useAuthStore';
 
 declare global {
@@ -48,7 +49,7 @@ export default function Login() {
       if (!window.google?.accounts?.id || initializedRef.current) return;
       try {
         window.google.accounts.id.initialize({
-          client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
+          client_id: GOOGLE_CLIENT_ID,
           callback: (response: any) => callbackRef.current(response.credential),
         });
         initializedRef.current = true;
