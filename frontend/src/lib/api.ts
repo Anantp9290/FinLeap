@@ -20,9 +20,9 @@ export async function apiRequest(endpoint: string, options: RequestInit = {}): P
       ...options,
       headers,
     });
-  } catch {
+  } catch (err: any) {
     throw new Error(
-      'Cannot reach the server. Start the backend: cd backend && npm run dev'
+      err?.message || 'Cannot connect to backend server. The server may be waking up from sleep or warming up, please try again in a few seconds.'
     );
   }
 
