@@ -101,16 +101,6 @@ cron.schedule('*/5 * * * 1-5', () => {
   }
 });
 
-// Fetch data once on startup for last closing prices, unless today is a holiday
-// In dev mode, also start the simulation for SSE streaming (skipped on holidays)
-if (isMarketHoliday()) {
-    console.log('Market holiday — skipping data fetch and simulation.');
-} else if (process.env.NODE_ENV !== 'production') {
-    updateDailyMarketData().then(() => startMarketSimulation());
-} else {
-    updateDailyMarketData().then(() => startMarketSimulation());
-}
-
 const PORT = process.env.PORT || 5001;
 
 const startServer = async () => {
@@ -122,7 +112,19 @@ const startServer = async () => {
     console.log('Connecting to MongoDB...');
     await mongoose.connect(uri);
     console.log('MongoDB connected successfully');
-    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+    
+    app.listen(PORT, () => {
+      console.log(`Server running on port ${PORT}`);
+      
+      // Start market simulation after server is listening so Render health check passes instantly
+      if (isMarketHoliday()) {
+        console.log('Market holiday — skipping data fetch and simulation.');
+      } else {
+        updateDailyMarketData()
+          .then(() => startMarketSimulation())
+          .catch((err) => console.error('Market init error:', err));
+      }
+    });
   } catch (err: any) {
     console.error('Failed to start server:', err.message);
     process.exit(1);
