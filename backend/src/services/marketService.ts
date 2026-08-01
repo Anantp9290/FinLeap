@@ -139,15 +139,13 @@ export function getMarketStatusInfo() {
 }
 
 async function fetchQuoteWithFallback(symbol: string): Promise<any> {
-  const q = await fetchYahooQuote(symbol);
-  if (q) return q;
+  try {
+    const q = await fetchYahooQuote(symbol);
+    if (q) return q;
+  } catch {}
 
-  if (!loggedQuoteFailures.has(symbol)) {
-    loggedQuoteFailures.add(symbol);
-    console.log(`Yahoo failed for ${symbol}, trying Twelve Data...`);
-  }
   const tdSymbol = toTwelveDataSymbol(symbol);
-  if (tdSymbol !== symbol) {
+  if (tdSymbol && tdSymbol !== symbol) {
     try {
       const tdQ = await fetchTwelveDataQuote(tdSymbol);
       if (tdQ) return tdQ;
@@ -155,11 +153,27 @@ async function fetchQuoteWithFallback(symbol: string): Promise<any> {
   }
 
   const cached = marketDataCache.get(symbol);
-  if (cached && !loggedQuoteFailures.has(`${symbol}:cache`)) {
-    loggedQuoteFailures.add(`${symbol}:cache`);
-    console.log(`Using cached data for ${symbol}`);
-  }
   if (cached) return cached;
+
+  try {
+    const dbRecord = await MarketMover.findOne({ symbol });
+    if (dbRecord) {
+      return {
+        symbol: dbRecord.symbol,
+        name: dbRecord.name,
+        price: dbRecord.lastPrice,
+        change: dbRecord.change,
+        changePercent: typeof dbRecord.changePercent === 'string' ? parseFloat(dbRecord.changePercent) : dbRecord.changePercent,
+        open: dbRecord.openPrice,
+        high: dbRecord.highPrice,
+        low: dbRecord.lowPrice,
+        prevClose: dbRecord.prevClose,
+        volume: dbRecord.volume,
+        marketCap: dbRecord.marketCap
+      };
+    }
+  } catch {}
+
   return null;
 }
 

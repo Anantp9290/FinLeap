@@ -137,7 +137,6 @@ async function fetchYahooQuote(symbol: string): Promise<QuoteResult | null> {
       timestamp: result.regularMarketTime || Date.now(),
     };
   } catch (err: any) {
-    console.error(`Yahoo quote error ${symbol}:`, err.message);
     return null;
   }
 }

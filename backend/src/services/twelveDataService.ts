@@ -64,7 +64,6 @@ export async function fetchTwelveDataQuote(symbol: string): Promise<TwelveDataQu
       timestamp: data.timestamp || Math.floor(Date.now() / 1000),
     };
   } catch (err: any) {
-    console.error(`Twelve Data quote error ${symbol}:`, err.message);
     return null;
   }
 }
