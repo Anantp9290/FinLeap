@@ -24,3 +24,6 @@ services:
         sync: false
       - key: TWELVE_DATA_API_KEY
         sync: false
+      - key: GOOGLE_CLIENT_ID
+        value: 475777238685-i0b2uet4vp2u7jqs7jej2v1nvuiv5r0j.apps.googleusercontent.com
+
