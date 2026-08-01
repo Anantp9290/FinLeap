@@ -32,7 +32,7 @@ const BudgetSchema = new Schema<IBudgetDocument>({
   updatedAt: { type: Date, default: Date.now },
 });
 
-BudgetSchema.pre('save', function () {
+BudgetSchema.pre('save', function (this: IBudgetDocument) {
   this.updatedAt = new Date();
 });
 

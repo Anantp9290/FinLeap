@@ -10,9 +10,9 @@ export function validate(schema: ZodSchema) {
         params: req.params,
       });
       next();
-    } catch (err) {
+    } catch (err: any) {
       if (err instanceof ZodError) {
-        const messages = err.errors.map(e => `${e.path.join('.')}: ${e.message}`);
+        const messages = err.errors.map((e: any) => `${e.path.join('.')}: ${e.message}`);
         return res.status(400).json({ message: 'Validation error', errors: messages });
       }
       next(err);

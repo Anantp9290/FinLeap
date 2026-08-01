@@ -76,7 +76,7 @@ const TransactionSchema = new Schema<ITransactionDocument>({
   updatedAt: { type: Date, default: Date.now },
 });
 
-TransactionSchema.pre('save', function () {
+TransactionSchema.pre('save', function (this: ITransactionDocument) {
   this.updatedAt = new Date();
 });
 
