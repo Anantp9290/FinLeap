@@ -19,7 +19,7 @@ router.get('/sentiment', auth, async (req: Request, res: Response) => {
   try {
     const movers = await MarketMover.find();
 
-    const bullishCount = movers.filter(m => (m.changePercent || 0) > 0).length;
+    const bullishCount = movers.filter((m: any) => (m.changePercent || 0) > 0).length;
     const totalCount = movers.length;
     const bullishScore = totalCount > 0 ? Math.round((bullishCount / totalCount) * 100) : 50;
 

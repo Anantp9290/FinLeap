@@ -14,7 +14,7 @@ router.get('/score', auth, async (req: Request, res: Response) => {
 
     let totalAssets = 0;
     let totalLiabilities = 0;
-    assets.forEach(a => a.category === 'Asset' ? totalAssets += a.currentValue : totalLiabilities += a.currentValue);
+    assets.forEach((a: any) => a.category === 'Asset' ? totalAssets += a.currentValue : totalLiabilities += a.currentValue);
 
     let score = 50;
     const savingsRate = totalAssets > 0 ? (totalAssets - totalLiabilities) / totalAssets : 0;

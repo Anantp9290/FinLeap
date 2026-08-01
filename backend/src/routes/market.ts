@@ -162,17 +162,17 @@ router.get('/movers', async (req: Request, res: Response) => {
       .sort({ changePercent: -1 })
       .select('-history');
 
-    const stocks = dedupeBySymbol(movers.filter(m => m.type === 'Stock'));
-    const indices = dedupeByName(movers.filter(m => m.type === 'Index'));
+    const stocks = dedupeBySymbol(movers.filter((m: any) => m.type === 'Stock') as any[]);
+    const indices = dedupeByName(movers.filter((m: any) => m.type === 'Index') as any[]);
 
     res.json({
       indices: indices,
       gainers: stocks.slice(0, 10),
-      losers: [...stocks].sort((a, b) => (a.changePercent || 0) - (b.changePercent || 0)).slice(0, 10),
-      up5Percent: stocks.filter(m => (m.changePercent || 0) >= 5),
-      down5Percent: stocks.filter(m => (m.changePercent || 0) <= -5),
-      upperCircuits: stocks.filter(m => m.circuitHit === 'Upper'),
-      lowerCircuits: stocks.filter(m => m.circuitHit === 'Lower')
+      losers: [...stocks].sort((a, b) => ((a as any).changePercent || 0) - ((b as any).changePercent || 0)).slice(0, 10),
+      up5Percent: stocks.filter((m: any) => ((m as any).changePercent || 0) >= 5),
+      down5Percent: stocks.filter((m: any) => ((m as any).changePercent || 0) <= -5),
+      upperCircuits: stocks.filter((m: any) => (m as any).circuitHit === 'Upper'),
+      lowerCircuits: stocks.filter((m: any) => (m as any).circuitHit === 'Lower')
     });
   } catch (error) {
     res.status(500).json({ message: 'Server error' });

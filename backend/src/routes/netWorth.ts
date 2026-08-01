@@ -13,7 +13,7 @@ router.get('/net-worth', auth, async (req: Request, res: Response) => {
     let totalAssets = 0;
     let totalLiabilities = 0;
 
-    assets.forEach(a => {
+    assets.forEach((a: any) => {
       if (a.category === 'Asset') totalAssets += a.currentValue;
       else totalLiabilities += a.currentValue;
     });
